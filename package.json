@@ -1,0 +1,27 @@
+{
+  "name": "vue-barcode-detector",
+  "version": "1.0.0",
+  "description": "A barcode device detector for VueJS applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:programic/vue-barcode-detector.git"
+  },
+  "keywords": [
+    "vuejs",
+    "barcodes"
+  ],
+  "author": "Jesse Koerhuis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/programic/vue-barcode-detector/issues"
+  },
+  "homepage": "https://github.com/programic/vue-barcode-detector",
+  "dependencies": {
+    "@types/node": "^22.0.2",
+    "vue": "^3.4.35"
+  }
+}
