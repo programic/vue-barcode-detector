@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/jkoerhuis.development/vue-barcode-detector.git"
+    "url": "git+ssh://git@github.com:programic/vue-barcode-detector.git"
   },
   "keywords": [
     "vuejs",
@@ -17,9 +17,9 @@
   "author": "Jesse Koerhuis",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/jkoerhuis.development/vue-barcode-detector/issues"
+    "url": "https://github.com/programic/vue-barcode-detector/issues"
   },
-  "homepage": "https://gitlab.com/jkoerhuis.development/vue-barcode-detector#readme",
+  "homepage": "https://github.com/programic/vue-barcode-detector",
   "dependencies": {
     "@types/node": "^22.0.2",
     "vue": "^3.4.35"
