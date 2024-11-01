@@ -1,27 +1,62 @@
 {
-  "name": "vue-barcode-detector",
+  "name": "@programic/vue-barcode-detector",
   "version": "1.0.0",
-  "description": "A barcode device detector for VueJS applications.",
-  "main": "index.js",
+  "description": "A barcode device detector for JavaScript/TypeScript and VueJS.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "jest --config jest.config.ts",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:programic/vue-barcode-detector.git"
+    "url": "git+https://github.com/programic/vue-barcode-detector.git"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "keywords": [
-    "vuejs",
+    "vue",
+    "typescript",
     "barcodes"
   ],
-  "author": "Jesse Koerhuis",
+  "author": "Jesse Koerhuis (https://gitlab.com/jkoerhuis.development)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/programic/vue-barcode-detector/issues"
   },
-  "homepage": "https://github.com/programic/vue-barcode-detector",
-  "dependencies": {
-    "@types/node": "^22.0.2",
-    "vue": "^3.4.35"
+  "homepage": "https://programic.com",
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@programic/eslint-plugin": "^10.1.0",
+    "@types/jest": "^29.5.12",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vue/test-utils": "^2.4.6",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-unicorn": "^55.0.0",
+    "eslint-plugin-vue": "^9.27.0",
+    "eslit": "^6.0.0",
+    "globals": "^15.9.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.3.0",
+    "vue": "^3.4.38",
+    "vue-eslint-parser": "^9.4.3"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.38"
   }
 }

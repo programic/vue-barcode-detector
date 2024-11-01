@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    "@programic"
+  ],
+  "extends": [
+    "plugin:@programic/vue-typescript"
+  ]
+}
