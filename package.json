@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "test": "vitest",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
