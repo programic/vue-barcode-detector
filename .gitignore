@@ -1,3 +1,5 @@
+.idea
+
 # Logs
 logs
 *.log
@@ -102,7 +104,6 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Docusaurus cache and generated files
 .docusaurus
