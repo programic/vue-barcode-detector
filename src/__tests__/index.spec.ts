@@ -1,6 +1,10 @@
+import { describe, expect, it } from 'vitest';
 import { flushPromises } from '@vue/test-utils';
 import useBarcodeDetector, { type ScannedBarcodeData } from '../index';
 
+/**
+ * @vitest-environment jsdom
+ */
 describe('the barcode detector', () => {
   it('should listen to the keydown events', async () => {
     const barcodeDetector = useBarcodeDetector();
@@ -24,7 +28,7 @@ describe('the barcode detector', () => {
     expect(barcodeValue).toBe('ad46f21hx');
   });
 
-  it('should reset the values without Enter key', async () => {
+  it('should reset the values when no Enter key was pressed', async () => {
     const barcodeDetector = useBarcodeDetector();
     let barcodeValue = null;
 

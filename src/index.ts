@@ -18,7 +18,7 @@ export interface ScannedBarcodeData {
 }
 
 /**
- * Used as an interface for the callback that should be provided when listening to the detector.
+ * Used for the callback that should be provided when listening to the detector.
  */
 export interface BarcodeScannerListenerCallback {
   (barcodeData: ScannedBarcodeData): void;
@@ -59,16 +59,15 @@ const config = {
  * is a separate event, followed by an Enter to indicate the end of the stream.
  */
 export default function useBarcodeDetector(): BarcodeScannerComposableExports {
+  let barcodeScannerInterval: NodeJS.Timeout | null = null;
+  let listeningActive: boolean = false;
+  let onScanCallback: BarcodeScannerListenerCallback | undefined;
+
   const barcode = ref<string>('');
-  const barcodeScannerInterval = ref<NodeJS.Timeout | null>(null);
-  const listeningActive = ref<boolean>(false);
-  const onScanCallback = ref<BarcodeScannerListenerCallback>();
 
   /**
    * Acts as a factory method for creating a new barcode data object.
    * This object contains the value the barcode and a timestamp for when it was scanned.
-   *
-   * @param {string} barcodeValue
    */
   function createScannedBarcodeData(barcodeValue: string): ScannedBarcodeData {
     const date = new Date();
@@ -89,17 +88,15 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
    *
    * Note: Scanner devices always rapidly fire events. After a certain delay, the scanner must ignore
    * input as to not confuse them with regular keyboard typing events.
-   *
-   * @param {Event} event
    */
   function registerScannerInput(event: Event): void {
-    if (barcodeScannerInterval.value) {
-      clearInterval(barcodeScannerInterval.value);
+    if (barcodeScannerInterval) {
+      clearInterval(barcodeScannerInterval);
     }
 
     if (event instanceof KeyboardEvent && event.code === keyboard.key.enter) {
-      if (barcode.value && onScanCallback.value) {
-        onScanCallback.value(
+      if (barcode.value && onScanCallback) {
+        onScanCallback(
           createScannedBarcodeData(barcode.value),
         );
       }
@@ -113,7 +110,7 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
       barcode.value += event.key;
     }
 
-    barcodeScannerInterval.value = setInterval(() => {
+    barcodeScannerInterval = setInterval(() => {
       barcode.value = '';
     }, config.timeout);
   }
@@ -122,12 +119,12 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
    * This function can be called to stop listening to scanner input.
    */
   function stopListening(): void {
-    listeningActive.value = false;
+    listeningActive = false;
 
     document.removeEventListener(keyboard.event, registerScannerInput);
 
-    if (barcodeScannerInterval.value) {
-      clearInterval(barcodeScannerInterval.value);
+    if (barcodeScannerInterval) {
+      clearInterval(barcodeScannerInterval);
     }
   }
 
@@ -136,16 +133,14 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
    * to handle the data that is returned when scanning a barcode. When called, it cannot be called
    * a second time due to the check at the beginning. This prevents the DOM from becoming clogged with
    * duplicate listeners.
-   *
-   * @param {BarcodeScannerListenerCallback} callback
    */
   function listen(callback: BarcodeScannerListenerCallback): void {
-    if (listeningActive.value) {
+    if (listeningActive) {
       stopListening();
     }
 
-    listeningActive.value = true;
-    onScanCallback.value = callback;
+    listeningActive = true;
+    onScanCallback = callback;
 
     document.addEventListener(keyboard.event, registerScannerInput);
   }
