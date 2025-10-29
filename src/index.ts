@@ -34,6 +34,14 @@ interface BarcodeScannerComposableExports {
 }
 
 /**
+ * Used as type for the listener configuration.
+ */
+interface ScannedBarcodeOptions {
+  timeout?: number;
+  isPreventDefault?: boolean;
+}
+
+/**
  * Keyboard constant values.
  */
 const keyboard = {
@@ -47,8 +55,9 @@ const keyboard = {
 /**
  * The event listener timeout configuration.
  */
-const config = {
+const config:ScannedBarcodeOptions = {
   timeout: 100,
+  isPreventDefault: false,
 };
 
 /**
@@ -58,13 +67,13 @@ const config = {
  * listen to these events and store and return the data that was read. Each character in a barcode value
  * is a separate event, followed by an Enter to indicate the end of the stream.
  */
-export default function useBarcodeDetector(): BarcodeScannerComposableExports {
+export default function useBarcodeDetector(options: ScannedBarcodeOptions = {}): BarcodeScannerComposableExports {
   let barcodeScannerInterval: NodeJS.Timeout | null = null;
   let listeningActive: boolean = false;
   let onScanCallback: BarcodeScannerListenerCallback | undefined;
 
   const barcode = ref<string>('');
-
+  config.isPreventDefault = options?.isPreventDefault ?? config.isPreventDefault
   /**
    * Acts as a factory method for creating a new barcode data object.
    * This object contains the value the barcode and a timestamp for when it was scanned.
@@ -99,6 +108,9 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
         onScanCallback(
           createScannedBarcodeData(barcode.value),
         );
+        if(config.isPreventDefault){
+          event.preventDefault()
+        }
       }
 
       barcode.value = '';
