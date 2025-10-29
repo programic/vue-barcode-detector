@@ -40,7 +40,10 @@ const keyboard = {
   event: 'keydown',
   key: {
     enter: 'Enter',
-    shift: 'Shift',
+    exclude: [
+      'Shift',
+      'Unidentified'
+    ],
   },
 };
 
@@ -93,8 +96,8 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
     if (barcodeScannerInterval) {
       clearInterval(barcodeScannerInterval);
     }
-
-    if (event instanceof KeyboardEvent && event.code === keyboard.key.enter) {
+    const key = event instanceof KeyboardEvent ? (event?.code.length>0 ? event.code : event.key) : ''
+    if (key === keyboard.key.enter) {
       if (barcode.value && onScanCallback) {
         onScanCallback(
           createScannedBarcodeData(barcode.value),
@@ -106,7 +109,7 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
       return;
     }
 
-    if (event instanceof KeyboardEvent && event.code !== keyboard.key.shift) {
+    if (event instanceof KeyboardEvent && keyboard.key.exclude.indexOf(key) === -1) {
       barcode.value += event.key;
     }
 
