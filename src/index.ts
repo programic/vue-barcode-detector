@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Programic 2024.
+ * Copyright (c) Programic 2026.
  *
  * This code was written by Programic. For more information, please refer to the LICENSE.md file distributed
  * with this software. For more information, visit https://programic.com/.
@@ -7,31 +7,12 @@
 
 import { onBeforeUnmount, ref } from 'vue';
 
-import type { Ref } from 'vue';
-
-/**
- * Used for the data object that is returned after successfully detecting a barcode.
- */
-export interface ScannedBarcodeData {
-  timestamp: number;
-  value: string;
-}
-
-/**
- * Used for the callback that should be provided when listening to the detector.
- */
-export interface BarcodeScannerListenerCallback {
-  (barcodeData: ScannedBarcodeData): void;
-}
-
-/**
- * Used as type for the exports of the Vue composable `useBarcodeDetector()`.
- */
-interface BarcodeScannerComposableExports {
-  barcode: Ref<string>;
-  listen: (callback: BarcodeScannerListenerCallback) => void;
-  stopListening: () => void;
-}
+import type {
+  BarcodeScannerComposableExports,
+  BarcodeScannerListenerCallback,
+  ScannedBarcodeData,
+  ScannedBarcodeOptions,
+} from './index.d';
 
 /**
  * Keyboard constant values.
@@ -40,15 +21,19 @@ const keyboard = {
   event: 'keydown',
   key: {
     enter: 'Enter',
-    shift: 'Shift',
+    exclude: [
+      'Shift',
+      'Unidentified',
+    ],
   },
 };
 
 /**
  * The event listener timeout configuration.
  */
-const config = {
+const config: ScannedBarcodeOptions = {
   timeout: 100,
+  isPreventDefault: false,
 };
 
 /**
@@ -58,12 +43,14 @@ const config = {
  * listen to these events and store and return the data that was read. Each character in a barcode value
  * is a separate event, followed by an Enter to indicate the end of the stream.
  */
-export default function useBarcodeDetector(): BarcodeScannerComposableExports {
+export default function useBarcodeDetector(options: ScannedBarcodeOptions = {}): BarcodeScannerComposableExports {
   let barcodeScannerInterval: NodeJS.Timeout | null = null;
   let listeningActive: boolean = false;
   let onScanCallback: BarcodeScannerListenerCallback | undefined;
 
   const barcode = ref<string>('');
+
+  config.isPreventDefault = options?.isPreventDefault ?? config.isPreventDefault;
 
   /**
    * Acts as a factory method for creating a new barcode data object.
@@ -76,6 +63,10 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
       timestamp: date.getTime(),
       value: barcodeValue,
     };
+  }
+
+  function getKeyBoardEventKey(event: KeyboardEvent): string {
+    return (event.code.length > 0) ? event.code : event.key;
   }
 
   /**
@@ -94,11 +85,17 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
       clearInterval(barcodeScannerInterval);
     }
 
-    if (event instanceof KeyboardEvent && event.code === keyboard.key.enter) {
+    const key = (event instanceof KeyboardEvent) ? getKeyBoardEventKey(event) : '';
+
+    if (key === keyboard.key.enter) {
       if (barcode.value && onScanCallback) {
         onScanCallback(
           createScannedBarcodeData(barcode.value),
         );
+
+        if (config.isPreventDefault) {
+          event.preventDefault();
+        }
       }
 
       barcode.value = '';
@@ -106,7 +103,7 @@ export default function useBarcodeDetector(): BarcodeScannerComposableExports {
       return;
     }
 
-    if (event instanceof KeyboardEvent && event.code !== keyboard.key.shift) {
+    if (event instanceof KeyboardEvent && !keyboard.key.exclude.includes(key)) {
       barcode.value += event.key;
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "@programic/vue-barcode-detector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A barcode device detector for JavaScript/TypeScript and VueJS.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

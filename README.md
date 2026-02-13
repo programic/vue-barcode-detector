@@ -117,3 +117,10 @@ export interface BarcodeScannerListenerCallback {
 | Dependency              | minimal version |
 |-------------------------|-----------------|
 | Vue (Composition API)   | ^3.4.38         |
+
+
+## Contributors
+
+- [@jessekoerhuis](https://github.com/jessekoerhuis) (Author)
+- [@thimonwentink](https://github.com/thimonwentink) (Co-author)
+- [@Frantsuzzz](https://github.com/Frantsuzzz) (Co-author)
