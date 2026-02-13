@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { flushPromises } from '@vue/test-utils';
-import useBarcodeDetector, { type ScannedBarcodeData } from '../index';
+import useBarcodeDetector from '../index';
+
+import type { ScannedBarcodeData } from '../index.d';
 
 /**
  * @vitest-environment jsdom
